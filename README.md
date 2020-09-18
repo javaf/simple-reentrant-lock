@@ -1,65 +1,40 @@
-Simple Read-write Lock uses a counter and a
-boolean flag to keep track of multiple readers
-and a writer, but does not prioritize writers.
-A common lock is used to ensure internal
-updates happen atomically and a common
-condition is used for indicating either "no
-reader" or "no writer".
+A lock is re-entrant if it can be acquired multiple
+times by the same thread. Simple Reentrant Lock
+uses owner thread ID and hold count fields to keep
+track of the owning thread and the number of times
+it holds the lock. A common lock is used for
+ensuring field updates are atomic, and a condition
+object is used for synchronization.
 
-Acquiring the read lock involves holding the
-common lock, waiting until there is no writer,
-and finally incrementing the readers count.
-Releasing the read lock involves holding the
-common lock, decrementing the reader count, and
-signalling any writer/readers.
+Acquiring the lock involves holding the common
+lock, waiting until there is no other thread
+holding it, updating owner thread ID (to current)
+and incrementing hold count before releasing the
+common lock.
 
-Acquiring the write lock involves holding the
-common lock, waiting until there are no writers
-and readers, and finally indicating presence of
-a writer. Releasing the write lock involves
-involves holding the common lock, indicating
-absence of writer, and signalling any
-writer/readers.
+Releasing the write lock involves holding the
+common lock, decrementing hold count, and if
+not holding anymore, signalling the others before
+releasing the common lock.
 
-Even though the algorithm is correct, it is not
-quite satisfactory. If readers are much more
-frequent than writers, as is usually the case,
-the writers could be locked out for a long
-period of time by a continual stream of readers.
-Due to this lack of writer prioritization, this
-type of lock is generally only suitable for
-educational purposes.
+Java already provides a ReentrantLock. This is
+for educational purposes only.
 
 ```java
-readLock().lock():
+lock():
 1. Acquire common lock.
-2. Wait until there is no writer.
-3. Increment readers count.
+2. Wait until there is no other holder.
+3. Update owner, and increment hold count.
 4. Release common lock.
 ```
 
 ```java
-readLock().unlock():
+unlock():
 1. Acquire common lock.
-2. Decrement readers count.
-3. If no readers, signal any writer/readers.
-4. Release common lock.
-```
-
-```java
-writeLock().lock():
-1. Acquire common lock.
-2. Wait until there is no writer, reader.
-3. Indicate presence of writer.
-4. Release common lock.
-```
-
-```java
-writeLock().unlock():
-1. Acquire common lock.
-2. Indicate absence of writer.
-3. Signal any writer/readers.
-4. Release common lock.
+2. Throw expection, if we dont hold it.
+3. Decrement hold count.
+4. If not holding anymore, signal others.
+5. Release common lock.
 ```
 
 See [SimpleReadWriteLock.java] for code, [Main.java] for test, and [repl.it] for output.
