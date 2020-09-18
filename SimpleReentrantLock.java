@@ -7,7 +7,7 @@ import java.util.concurrent.locks.*;
 // it holds the lock. A common lock is used for
 // ensuring field updates are atomic, and a condition
 // object is used for synchronization.
-// 
+// cr
 // Acquiring the lock involves holding the common
 // lock, waiting until there is no other thread
 // holding it, updating owner thread ID (to current)
@@ -23,13 +23,20 @@ import java.util.concurrent.locks.*;
 // for educational purposes only.
 
 class SimpleReentrantLock extends AbstractLock {
-  Lock lock;
-  Condition noHolder;
+  final Lock lock;
+  final Condition noHolder;
   long owner, holdCount;
   // lock: common lock
   // condition: indicates "no holder"
   // owner: thread ID of holding thread
   // holdCount: times lock was acquired by owner
+
+  // 1. create lock (need not be reentrant)
+  // 2. create condition
+  public SimpleReentrantLock() {
+    lock = new ReentrantLock(); // 1
+    noHolder = lock.newCondition(); // 2
+  }
 
   // 1. Acquire common lock.
   // 2. Wait until there is no other holder.

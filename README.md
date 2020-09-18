@@ -37,11 +37,11 @@ unlock():
 5. Release common lock.
 ```
 
-See [SimpleReadWriteLock.java] for code, [Main.java] for test, and [repl.it] for output.
+See [SimpleReentrantLock.java] for code, [Main.java] for test, and [repl.it] for output.
 
-[SimpleReadWriteLock.java]: https://repl.it/@wolfram77/simple-read-write-lock#SimpleReadWriteLock.java
-[Main.java]: https://repl.it/@wolfram77/simple-read-write-lock#Main.java
-[repl.it]: https://simple-read-write-lock.wolfram77.repl.run
+[SimpleReentrantLock.java]: https://repl.it/@wolfram77/simple-reentrant-lock#SimpleReentrantLock.java
+[Main.java]: https://repl.it/@wolfram77/simple-reentrant-lock#Main.java
+[repl.it]: https://simple-reentrant-lock.wolfram77.repl.run
 
 
 ### references
